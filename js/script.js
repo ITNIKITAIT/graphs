@@ -1,3 +1,5 @@
+import { drawLines, graphs } from './animation.js';
+
 const SEED = 3118;
 const N = 11;
 
@@ -44,4 +46,14 @@ const printMatrix = (matrix) => {
 const newMatrix = generateDirMatrix();
 printMatrix(newMatrix);
 console.log('ky');
-printMatrix(getUndirMatrix(newMatrix));
+const unDirMatrix = getUndirMatrix(newMatrix);
+printMatrix(unDirMatrix);
+
+const connectGraphs = (matrix) => {
+    for (let i = 0; i < matrix.length; i++) {
+        for (let j = 0; j < matrix.length; j++) {
+            if (matrix[i][j]) drawLines(graphs[i], graphs[j]);
+        }
+    }
+};
+connectGraphs(unDirMatrix);
