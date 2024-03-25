@@ -1,14 +1,10 @@
 const SEED = 3118;
 const N = 11;
 
-const pseudoRandom = (seed) => {
-    let value = seed;
-    return function () {
-        value = (value * 16807) % 2147483647;
-        return value % 10 >= 5 ? 1 : 0;
-    };
+Math.seedrandom(SEED);
+const rand = () => {
+    return Math.random() * 2;
 };
-const generator = pseudoRandom(SEED);
 
 const mulmr = (rand, k) => {
     return Math.floor(rand * k);
@@ -23,7 +19,7 @@ const generateDirMatrix = () => {
     for (let i = 0; i < N; i++) {
         matrix.push([]);
         for (let j = 0; j < N; j++) {
-            matrix[i].push(generator());
+            matrix[i].push(mulmr(rand(), k));
         }
     }
     return matrix;
@@ -47,3 +43,5 @@ const printMatrix = (matrix) => {
 
 const newMatrix = generateDirMatrix();
 printMatrix(newMatrix);
+console.log('ky');
+printMatrix(getUndirMatrix(newMatrix));
