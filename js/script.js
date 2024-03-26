@@ -1,4 +1,4 @@
-import { drawLines, graphs } from './animation.js';
+import { graphs, drawArc } from './animation.js';
 
 const SEED = 3118;
 const N = 11;
@@ -45,14 +45,16 @@ const printMatrix = (matrix) => {
 
 const newMatrix = generateDirMatrix();
 printMatrix(newMatrix);
-console.log('ky');
+console.log('next');
 const unDirMatrix = getUndirMatrix(newMatrix);
 printMatrix(unDirMatrix);
 
 const connectGraphs = (matrix) => {
     for (let i = 0; i < matrix.length; i++) {
-        for (let j = 0; j < matrix.length; j++) {
-            if (matrix[i][j]) drawLines(graphs[i], graphs[j]);
+        for (let j = i; j < matrix.length; j++) {
+            if (matrix[i][j]) {
+                drawArc(graphs[i], graphs[j]);
+            }
         }
     }
 };
