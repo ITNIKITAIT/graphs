@@ -5,6 +5,19 @@ body {
     justify-content: center;
     align-items: center;
     height: 100vh;
+    gap: 50px;
+}
+
+ul {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+
+p,
+div {
+    padding: 0;
+    margin: 0;
 }
 
 * {
@@ -15,4 +28,53 @@ body {
 #canvas {
     border: 2px solid black;
     border-radius: 20px;
+}
+
+.matrix__wrapper {
+    min-width: 600px;
+}
+
+.matrix {
+    padding: 15px;
+    padding: 10px 0;
+}
+
+.title {
+    font-size: 28px;
+    color: black;
+    text-align: center;
+}
+
+.dirmatrix,
+.undirmatrix {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 5px;
+    margin: auto;
+    margin-top: 5px;
+    border: 1px solid blue;
+    border-radius: 10px;
+    padding: 10px;
+}
+
+.item {
+    width: 20px;
+    text-align: center;
+}
+
+.btn {
+    margin: auto;
+    background-color: transparent;
+    border: 1px solid rgb(20, 20, 20);
+    border-radius: 5px;
+    font-size: 20px;
+    padding: 10px 20px;
+    cursor: pointer;
+    width: fit-content;
+    display: block;
+    margin-top: 10px;
+}
+
+.btn:hover {
+    background-color: #efefef;
 }
