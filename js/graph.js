@@ -30,13 +30,13 @@ const fillVertexes = () => {
     const arrayOfVertex = [];
     const margin = 100;
     let interval = (canvas.width - margin * 2) / 3;
-    let startY = -(canvas.height / 3);
+    let curY = -(canvas.height / 3);
     const startX = -(canvas.width / 2) + margin;
     let curX = startX;
     for (let i = 1; i <= N - 1; i++) {
         if (i === 5) {
             arrayOfVertex.push(new Vertex(-startX, 0, RADIUS, i));
-            startY = -startY;
+            curY = -curY;
             interval *= -1;
             curX = -startX;
             continue;
@@ -45,107 +45,101 @@ const fillVertexes = () => {
             arrayOfVertex.push(new Vertex(startX, 0, RADIUS, i));
             break;
         }
-        arrayOfVertex.push(new Vertex(curX, startY, RADIUS, i));
+        arrayOfVertex.push(new Vertex(curX, curY, RADIUS, i));
         curX += interval;
     }
     arrayOfVertex.push(new Vertex(0, 0, RADIUS, 11));
     return arrayOfVertex;
 };
 
-const drawArrow = (fromx, fromy, tox, toy) => {
+const drawArrow = (fromX, fromY, toX, toY) => {
     const height = RADIUS / 2;
-    const angle = Math.atan2(toy - fromy, tox - fromx);
-    const xArrow = tox - RADIUS * Math.cos(angle);
-    const yArrow = toy - RADIUS * Math.sin(angle);
+    const angle = Math.atan2(toY - fromY, toX - fromX);
+    const arrowX = toX - RADIUS * Math.cos(angle);
+    const arrowY = toY - RADIUS * Math.sin(angle);
     ctx.beginPath();
     ctx.moveTo(
-        xArrow - height * Math.cos(angle - Math.PI / 6),
-        yArrow - height * Math.sin(angle - Math.PI / 6)
+        arrowX - height * Math.cos(angle - Math.PI / 6),
+        arrowY - height * Math.sin(angle - Math.PI / 6)
     );
-    ctx.lineTo(xArrow, yArrow);
+    ctx.lineTo(arrowX, arrowY);
     ctx.lineTo(
-        xArrow - height * Math.cos(angle + Math.PI / 6),
-        yArrow - height * Math.sin(angle + Math.PI / 6)
+        arrowX - height * Math.cos(angle + Math.PI / 6),
+        arrowY - height * Math.sin(angle + Math.PI / 6)
     );
     ctx.closePath();
     ctx.fill();
 };
 
-const drawLine = (graph1, graph2, isArrow) => {
+const drawLine = (ver1, ver2, isArrow) => {
     ctx.beginPath();
-    ctx.moveTo(graph1.x, graph1.y);
-    ctx.lineTo(graph2.x, graph2.y);
+    ctx.moveTo(ver1.x, ver1.y);
+    ctx.lineTo(ver2.x, ver2.y);
     ctx.stroke();
-    isArrow && drawArrow(graph1.x, graph1.y, graph2.x, graph2.y);
+    isArrow && drawArrow(ver1.x, ver1.y, ver2.x, ver2.y);
 };
 
-const drawSelfLine = (graph, isArrow) => {
+const drawSelfLine = (ver, isArrow) => {
     let height = 50;
-    if (graph.y > 0) height = -height;
+    if (ver.y > 0) height = -height;
     ctx.beginPath();
-    ctx.moveTo(graph.x, graph.y);
-    ctx.lineTo(graph.x - RADIUS, graph.y - height);
-    ctx.lineTo(graph.x + RADIUS, graph.y - height);
+    ctx.moveTo(ver.x, ver.y);
+    ctx.lineTo(ver.x - RADIUS, ver.y - height);
+    ctx.lineTo(ver.x + RADIUS, ver.y - height);
     ctx.closePath();
     ctx.stroke();
-    isArrow && drawArrow(graph.x + RADIUS, graph.y - height, graph.x, graph.y);
+    isArrow && drawArrow(ver.x + RADIUS, ver.y - height, ver.x, ver.y);
 };
 
-export const drawArc = (graph1, graph2, isArrow = false) => {
-    // console.log('working');
-    const interval = 100;
-    let middleX = (graph1.x + graph2.x) / 2;
-    let middleY = (graph1.y + graph2.y) / 2;
-    let radius = Math.abs(graph2.x - graph1.x);
-
-    if (graph1 === graph2) {
-        drawSelfLine(graph1, isArrow);
+export const drawConnection = (ver1, ver2, isArrow = false) => {
+    if (ver1 === ver2) {
+        drawSelfLine(ver1, isArrow);
         return;
     }
 
     if (
-        Math.round(graph1.y) === Math.round(graph2.y) &&
-        Math.abs(graph1.number - graph2.number) != 1
+        Math.round(ver1.y) === Math.round(ver2.y) &&
+        Math.abs(ver1.number - ver2.number) != 1
     ) {
-        graph1.y > 0 ? (middleY += interval) : (middleY -= interval);
+        drawArc(ver1, ver2, isArrow);
     } else if (
-        Math.round(graph1.x) === Math.round(graph2.x) &&
-        Math.abs(graph1.number - graph2.number) != 1
+        Math.round(ver1.x) === Math.round(ver2.x) &&
+        Math.abs(ver1.number - ver2.number) != 1
     ) {
-        radius = Math.abs(graph2.y - graph1.y);
-        graph1.x > 0 ? (middleX += interval) : (middleX -= interval);
+        drawArc(ver1, ver2, isArrow);
     } else if (
-        Math.abs(graph2.number - graph1.number) === 5 &&
-        graph2.number != N &&
-        graph1.number != N
+        Math.abs(ver2.number - ver1.number) === 5 &&
+        ver2.number != N &&
+        ver1.number != N
     ) {
-        if (graph1.x < 0) {
-            middleY += interval;
-            middleX -= interval;
-        } else {
-            middleY -= interval;
-            middleX -= interval;
-        }
-        radius = Math.abs(graph2.y - graph1.y);
+        drawArc(ver1, ver2, isArrow);
     } else {
-        drawLine(graph1, graph2, isArrow);
-        return;
+        drawLine(ver1, ver2, isArrow);
     }
+};
+
+export const drawArc = (ver1, ver2, isArrow = false) => {
+    let middleX = (ver1.x + ver2.x) / 2;
+    let middleY = (ver1.y + ver2.y) / 2;
+    let radius = Math.max(Math.abs(ver2.x - ver1.x), Math.abs(ver2.y - ver1.y));
+
+    middleX += (ver2.y - ver1.y) / 5;
+    middleY += (ver2.x - ver1.x) / 5;
 
     ctx.beginPath();
-    ctx.moveTo(graph1.x, graph1.y);
-    ctx.arcTo(middleX, middleY, graph2.x, graph2.y, radius);
-    ctx.lineTo(graph2.x, graph2.y);
+    ctx.moveTo(ver1.x, ver1.y);
+    ctx.arcTo(middleX, middleY, ver2.x, ver2.y, radius);
+    ctx.lineTo(ver2.x, ver2.y);
     ctx.stroke();
 
-    isArrow && drawArrow(middleX, middleY, graph2.x, graph2.y);
+    isArrow && drawArrow(middleX, middleY, ver2.x, ver2.y);
 };
 
 export const resetCanvas = () => {
     ctx.setTransform(1, 0, 0, 1, 0, 0);
     ctx.clearRect(0, 0, canvas.width, canvas.height);
     ctx.translate(canvas.width / 2, canvas.height / 2);
-    vertexes.forEach((el) => el.drawVertex());
+    vertices.forEach((el) => el.drawVertex());
 };
 
-export const vertexes = fillVertexes();
+export const vertices = fillVertexes();

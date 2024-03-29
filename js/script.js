@@ -1,5 +1,5 @@
 import { mulmr } from './random.js';
-import { vertexes, drawArc, resetCanvas } from './graph.js';
+import { vertices, drawConnection, resetCanvas, drawArc } from './graph.js';
 
 const N = 11;
 
@@ -24,20 +24,11 @@ const getUndirMatrix = (matrix) => {
     return undirMatrix;
 };
 
-// const printMatrix = (matrix) => {
-//     matrix.forEach((el) => {
-//         console.log(el.join('  '));
-//     });
-// };
-
-const dirMatrix = generateDirMatrix();
-const unDirMatrix = getUndirMatrix(dirMatrix);
-
 const connectUnDirMatrix = (matrix) => {
     for (let i = 0; i < matrix.length; i++) {
         for (let j = i; j < matrix.length; j++) {
             if (matrix[i][j]) {
-                drawArc(vertexes[i], vertexes[j]);
+                drawConnection(vertices[i], vertices[j]);
             }
         }
     }
@@ -47,7 +38,9 @@ const connectDirMatrix = (matrix) => {
     for (let i = 0; i < matrix.length; i++) {
         for (let j = 0; j < matrix.length; j++) {
             if (matrix[i][j]) {
-                drawArc(vertexes[i], vertexes[j], true);
+                if (matrix[j][i] && i > j)
+                    drawArc(vertices[i], vertices[j], true);
+                else drawConnection(vertices[i], vertices[j], true);
             }
         }
     }
@@ -71,6 +64,9 @@ function fillMatrix(list, matrix) {
     }
 }
 
+const dirMatrix = generateDirMatrix();
+const unDirMatrix = getUndirMatrix(dirMatrix);
+
 // Buttons and lists
 
 const list1 = document.querySelector('.dirmatrix');
@@ -89,3 +85,5 @@ btnUnDirMatrix.addEventListener('click', () => {
     resetCanvas();
     connectUnDirMatrix(unDirMatrix);
 });
+
+// vertices.forEach((el) => el.drawVertex());
