@@ -7,18 +7,36 @@
         <title>Graphs</title>
     </head>
     <body>
-        <canvas width="900" height="700" id="canvas">\</canvas>
-        <div class="matrix__wrapper">
-            <div class="matrix">
-                <p class="title">dirMatrix</p>
-                <ul class="dirmatrix"></ul>
-                <button class="btn btn-dirmatrix">DRAW</button>
+        <div class="container">
+            <canvas width="900" height="700" id="canvas">\</canvas>
+            <div class="matrix__wrapper">
+                <div class="matrix">
+                    <p class="title">dirMatrix</p>
+                    <ul class="dirmatrix"></ul>
+                    <button class="btn btn-dirmatrix">DRAW</button>
+                </div>
+                <div class="matrix">
+                    <p class="title">unDirMatrix</p>
+                    <ul class="undirmatrix"></ul>
+                    <button class="btn btn-undirmatrix">DRAW</button>
+                </div>
             </div>
-            <div class="matrix">
-                <p class="title">unDirMatrix</p>
-                <ul class="undirmatrix"></ul>
-                <button class="btn btn-undirmatrix">DRAW</button>
-            </div>
+        </div>
+        <div class="tables">
+            <table id="table-route-ln2">
+                <tr>
+                    <th>Start</th>
+                    <th>End</th>
+                    <th>Route</th>
+                </tr>
+            </table>
+            <table id="table-route-ln3">
+                <tr>
+                    <th>Start</th>
+                    <th>End</th>
+                    <th>Route</th>
+                </tr>
+            </table>
         </div>
         <script src="https://cdnjs.cloudflare.com/ajax/libs/seedrandom/3.0.5/seedrandom.min.js"></script>
         <script type="module" src="./js/script.js"></script>

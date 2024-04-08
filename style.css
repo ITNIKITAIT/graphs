@@ -1,11 +1,7 @@
 body {
     margin: 0;
     padding: 0;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    height: 100vh;
-    gap: 50px;
+    padding-bottom: 50px;
 }
 
 ul {
@@ -23,6 +19,14 @@ div {
 * {
     -webkit-box-sizing: border-box;
     box-sizing: border-box;
+}
+
+.container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    gap: 50px;
 }
 
 #canvas {
@@ -76,4 +80,30 @@ div {
 
 .btn:hover {
     background-color: #efefef;
+}
+
+/* table */
+
+.tables {
+    display: flex;
+    gap: 50px;
+    justify-content: center;
+}
+
+table {
+    font-family: arial, sans-serif;
+    border-collapse: collapse;
+    width: 500px;
+    height: fit-content;
+}
+
+td,
+th {
+    border: 1px solid black;
+    text-align: center;
+    padding: 8px;
+}
+
+tr:nth-child(even) {
+    background-color: #dddddd;
 }

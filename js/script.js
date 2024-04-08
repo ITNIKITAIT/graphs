@@ -87,3 +87,74 @@ btnUnDirMatrix.addEventListener('click', () => {
 });
 
 // vertices.forEach((el) => el.drawVertex());
+
+const multiplyMatrix = (matrix1, matrix2) => {
+    const length = matrix1.length;
+    const squareMatrix = [];
+    for (let i = 0; i < length; i++) {
+        squareMatrix.push([]);
+        for (let j = 0; j < length; j++) {
+            let res = 0;
+            for (let k = 0; k < length; k++) {
+                res += matrix1[i][k] * matrix2[k][j];
+            }
+            squareMatrix[i].push(res);
+        }
+    }
+    return squareMatrix;
+};
+
+const matrixInPower = (matrix, power) => {
+    let newMatrix = matrix;
+    for (let i = 1; i < power; i++) {
+        newMatrix = multiplyMatrix(newMatrix, matrix);
+    }
+    return newMatrix;
+};
+
+const findRoutes = (matrix, length) => {
+    let arrOfRoutes = [];
+    const dfs = (currentRow, n, path) => {
+        if (n === length) {
+            arrOfRoutes.push([...path, currentRow + 1]);
+            return;
+        }
+        for (let next = 0; next < matrix.length; next++) {
+            if (matrix[currentRow][next]) {
+                dfs(next, n + 1, [...path, currentRow + 1]);
+            }
+        }
+    };
+    for (let i = 0; i < matrix.length; i++) {
+        dfs(i, 0, []);
+    }
+    return arrOfRoutes;
+};
+
+const mat = [
+    [0, 1, 0, 1, 0],
+    [0, 0, 0, 0, 1],
+    [1, 0, 0, 0, 0],
+    [0, 0, 1, 0, 1],
+    [0, 1, 0, 0, 0],
+];
+
+const AllRoutes2 = findRoutes(mat, 2);
+const AllRoutes3 = findRoutes(mat, 3);
+
+const tableRoute2 = document.getElementById('table-route-ln2');
+const tableRoute3 = document.getElementById('table-route-ln3');
+
+const fillRoutes = (arr, table) => {
+    arr.forEach((route) => {
+        const newRow = table.insertRow(-1);
+        const startRoute = newRow.insertCell(0);
+        startRoute.innerHTML = 'V' + route[0];
+        const endRoute = newRow.insertCell(1);
+        endRoute.innerHTML = 'V' + route.at(-1);
+        const fulltRoute = newRow.insertCell(2);
+        fulltRoute.innerHTML = `(${route.map((el) => 'V' + el).join(', ')})`;
+    });
+};
+fillRoutes(AllRoutes2, tableRoute2);
+fillRoutes(AllRoutes3, tableRoute3);
