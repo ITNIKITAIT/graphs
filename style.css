@@ -96,6 +96,10 @@ table {
     width: 500px;
     height: fit-content;
 }
+caption {
+    font-size: 22px;
+    padding-bottom: 10px;
+}
 
 td,
 th {
