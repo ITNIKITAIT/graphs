@@ -139,8 +139,8 @@ const mat = [
     [0, 1, 0, 0, 0],
 ];
 
-const AllRoutes2 = findRoutes(mat, 2);
-const AllRoutes3 = findRoutes(mat, 3);
+const AllRoutes2 = findRoutes(dirMatrix, 2);
+const AllRoutes3 = findRoutes(dirMatrix, 3);
 
 const tableRoute2 = document.getElementById('table-route-ln2');
 const tableRoute3 = document.getElementById('table-route-ln3');
@@ -156,5 +156,84 @@ const fillRoutes = (arr, table) => {
         fulltRoute.innerHTML = `(${route.map((el) => 'V' + el).join(', ')})`;
     });
 };
+
 fillRoutes(AllRoutes2, tableRoute2);
 fillRoutes(AllRoutes3, tableRoute3);
+
+const matrixToBoolean = (matrix) => {
+    for (let i = 0; i < matrix.length; i++) {
+        for (let j = 0; j < matrix.length; j++) {
+            if (matrix[i][j]) matrix[i][j] = 1;
+        }
+    }
+    return matrix;
+};
+
+const addMatrix = (matrix1, matrix2) => {
+    const result = structuredClone(matrix1);
+    for (let i = 0; i < matrix2.length; i++) {
+        for (let j = 0; j < matrix2.length; j++) {
+            result[i][j] += matrix2[i][j];
+        }
+    }
+    return result;
+};
+
+const multiplyMatrixIndivid = (matrix1, matrix2) => {
+    const result = structuredClone(matrix1);
+    for (let i = 0; i < matrix2.length; i++) {
+        for (let j = 0; j < matrix2.length; j++) {
+            result[i][j] *= matrix2[i][j];
+        }
+    }
+    return result;
+};
+
+const AdjacencyMatrix = (matrix) => {
+    let result = structuredClone(matrix);
+    for (let i = 2; i < matrix.length; i++) {
+        const matrixUpper = matrixInPower(matrix, i);
+        result = addMatrix(matrixUpper, result);
+    }
+    for (let d = 0; d < matrix.length; d++) {
+        result[d][d]++;
+    }
+    return matrixToBoolean(result);
+};
+
+const AdjacMatrix = AdjacencyMatrix(dirMatrix);
+console.log(matrixInPower(AdjacMatrix, 2));
+const matrixT = (matrix) => {
+    const transposedMatrix = structuredClone(matrix);
+    for (let i = 0; i < matrix.length; i++) {
+        for (let j = 0; j < matrix.length; j++) {
+            transposedMatrix[j][i] = matrix[i][j];
+        }
+    }
+    return transposedMatrix;
+};
+
+const strongConnectMatrix = multiplyMatrixIndivid(
+    AdjacMatrix,
+    matrixT(AdjacMatrix)
+);
+
+console.log(strongConnectMatrix);
+
+const findStrongComponents = (matrix) => {
+    const obj = {};
+    for (let i = 0; i < matrix.length; i++) {
+        const value = matrix[i].toString();
+        if (obj[value]) obj[value].push(`V${i + 1}`);
+        else obj[value] = [`V${i + 1}`];
+    }
+
+    const components = {};
+    let i = 1;
+    for (const key in obj) {
+        components['K' + i] = obj[key];
+        i++;
+    }
+    return components;
+};
+console.log(findStrongComponents(strongConnectMatrix));
