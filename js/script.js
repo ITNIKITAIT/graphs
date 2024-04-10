@@ -202,7 +202,7 @@ const AdjacencyMatrix = (matrix) => {
 };
 
 const AdjacMatrix = AdjacencyMatrix(dirMatrix);
-console.log(matrixInPower(AdjacMatrix, 2));
+
 const matrixT = (matrix) => {
     const transposedMatrix = structuredClone(matrix);
     for (let i = 0; i < matrix.length; i++) {
@@ -217,8 +217,6 @@ const strongConnectMatrix = multiplyMatrixIndivid(
     AdjacMatrix,
     matrixT(AdjacMatrix)
 );
-
-console.log(strongConnectMatrix);
 
 const findStrongComponents = (matrix) => {
     const obj = {};
@@ -237,3 +235,67 @@ const findStrongComponents = (matrix) => {
     return components;
 };
 console.log(findStrongComponents(strongConnectMatrix));
+
+//2
+
+const findUndirMatrixDegree = (matrix) => {
+    const res = [];
+    for (let i = 0; i < matrix.length; i++) {
+        let counter = 0;
+        for (let j = 0; j < matrix.length; j++) {
+            if (matrix[i][j]) {
+                if (i === j) counter++;
+                counter++;
+            }
+        }
+        console.log(`for V${i + 1} = ${counter}`);
+        res.push(counter);
+    }
+    return res;
+};
+const findDirMatrixTotalDegree = (matrix) => {
+    const [arr1, arr2] = Object.values(findMatrixDegrees(matrix));
+    return arr1.map((_, i) => arr1[i] + arr2[i]);
+};
+
+const findMatrixDegrees = (matrix) => {
+    const res = {
+        inDegree: [],
+        outDegree: [],
+    };
+    for (let i = 0; i < matrix.length; i++) {
+        let counterIn = 0;
+        let counterOut = 0;
+        for (let j = 0; j < matrix.length; j++) {
+            if (matrix[i][j]) counterOut++;
+            if (matrix[j][i]) counterIn++;
+        }
+        console.log(`for V${i + 1} indegree = ${counterIn}`);
+        console.log(`for V${i + 1} outdegree = ${counterOut}`);
+        res.inDegree.push(counterIn);
+        res.outDegree.push(counterOut);
+    }
+    return res;
+};
+
+const isRegularMatrix = (degrees) => {
+    return degrees.every((el) => degrees[0] === el);
+};
+
+const findIsolatedVertices = (degrees) => {
+    const res = [];
+    degrees.forEach((el, i) => el === 0 && res.push(`V${i + 1}`));
+    return res;
+};
+const findHangingVertices = (degrees) => {
+    const res = [];
+    degrees.forEach((el, i) => el === 1 && res.push(`V${i + 1}`));
+    return res;
+};
+const degreesMat = findDirMatrixTotalDegree(mat);
+console.log(degreesMat);
+findUndirMatrixDegree(unDirMatrix);
+findMatrixDegrees(mat);
+console.log(isRegularMatrix(mat));
+console.log(findIsolatedVertices(degreesMat));
+console.log(findHangingVertices(degreesMat));
