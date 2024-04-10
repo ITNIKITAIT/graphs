@@ -8,42 +8,62 @@
     </head>
     <body>
         <div class="container">
-            <canvas width="900" height="700" id="canvas">\</canvas>
+            <canvas width="900" height="700" id="canvas"></canvas>
             <div class="matrix__wrapper">
                 <div class="matrix">
                     <p class="title">dirMatrix</p>
-                    <ul class="dirmatrix"></ul>
+                    <ul class="matrix-list dirmatrix"></ul>
                     <button class="btn btn-dirmatrix">DRAW</button>
                 </div>
                 <div class="matrix">
                     <p class="title">unDirMatrix</p>
-                    <ul class="undirmatrix"></ul>
+                    <ul class="matrix-list undirmatrix"></ul>
                     <button class="btn btn-undirmatrix">DRAW</button>
                 </div>
             </div>
         </div>
-        <div class="tables">
-            <table id="table-route-ln2">
-                <caption>
-                    Routes for 2 length
-                </caption>
-                <tr>
-                    <th>Start</th>
-                    <th>End</th>
-                    <th>Route</th>
-                </tr>
-            </table>
-            <table id="table-route-ln3">
-                <caption>
-                    Routes for 3 length
-                </caption>
-                <tr>
-                    <th>Start</th>
-                    <th>End</th>
-                    <th>Route</th>
-                </tr>
-            </table>
-        </div>
+        <h2 class="main__title">Calculations</h2>
+        <main>
+            <div class="tables">
+                <table id="table-route-ln2">
+                    <caption>
+                        Routes for 2 length
+                    </caption>
+                    <tr>
+                        <th>Start</th>
+                        <th>End</th>
+                        <th>Route</th>
+                    </tr>
+                </table>
+                <table id="table-route-ln3">
+                    <caption>
+                        Routes for 3 length
+                    </caption>
+                    <tr>
+                        <th>Start</th>
+                        <th>End</th>
+                        <th>Route</th>
+                    </tr>
+                </table>
+            </div>
+            <div class="right-part">
+                <div class="extra-matrix__wrapper">
+                    <div class="matrix">
+                        <p class="title">reachabilityMatrix</p>
+                        <ul class="matrix-list reachmatrix"></ul>
+                    </div>
+                    <div class="matrix">
+                        <p class="title">strongConnectMatrix</p>
+                        <ul class="matrix-list strongmatrix"></ul>
+                    </div>
+                </div>
+                <h3 class="main__subtitle">
+                    Components of strong connectivity
+                </h3>
+                <ul class="strong-components-list"></ul>
+                <canvas id="canvas-components" width="100"></canvas>
+            </div>
+        </main>
         <script src="https://cdnjs.cloudflare.com/ajax/libs/seedrandom/3.0.5/seedrandom.min.js"></script>
         <script type="module" src="./js/script.js"></script>
     </body>

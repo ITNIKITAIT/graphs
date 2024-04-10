@@ -25,13 +25,21 @@ div {
     display: flex;
     justify-content: center;
     align-items: center;
-    height: 100vh;
+    min-height: 100vh;
     gap: 50px;
 }
 
 #canvas {
     border: 2px solid black;
     border-radius: 20px;
+}
+
+#canvas-components {
+    border: 2px solid black;
+    border-radius: 5px;
+    margin-top: 20px;
+    width: 100%;
+    max-height: 600px;
 }
 
 .matrix__wrapper {
@@ -49,8 +57,7 @@ div {
     text-align: center;
 }
 
-.dirmatrix,
-.undirmatrix {
+.matrix-list {
     display: flex;
     flex-wrap: wrap;
     gap: 5px;
@@ -82,18 +89,40 @@ div {
     background-color: #efefef;
 }
 
+/* main */
+
+main {
+    display: flex;
+    justify-content: center;
+    gap: 40px;
+}
+
+.main__title {
+    text-align: center;
+    font-size: 42px;
+    color: black;
+    margin: 0;
+    padding: 0 0 40px 0;
+}
+.main__subtitle {
+    font-size: 28px;
+    color: rgb(55, 55, 55);
+    padding: 10px 0;
+    margin: 0;
+}
+
 /* table */
 
 .tables {
     display: flex;
-    gap: 50px;
+    gap: 20px;
     justify-content: center;
 }
 
 table {
     font-family: arial, sans-serif;
     border-collapse: collapse;
-    width: 500px;
+    width: 460px;
     height: fit-content;
 }
 caption {
@@ -110,4 +139,26 @@ th {
 
 tr:nth-child(even) {
     background-color: #dddddd;
+}
+
+/* .right-part {
+    display: flex;
+    flex-direction: column;
+} */
+
+.extra-matrix__wrapper {
+    display: flex;
+    gap: 30px;
+}
+
+.strong-components-list {
+    background-color: #eae9e9;
+    padding: 10px;
+    border: 1px solid rgb(55, 55, 55);
+}
+
+.component {
+    font-size: 20px;
+    color: black;
+    padding: 10px 0;
 }

@@ -1,5 +1,13 @@
 import { mulmr } from './random.js';
 import { vertices, drawConnection, resetCanvas, drawArc } from './graph.js';
+import {
+    findUndirMatrixDegree,
+    findDirMatrixTotalDegree,
+    findMatrixDegrees,
+    isRegularMatrix,
+    findIsolatedVertices,
+    findHangingVertices,
+} from './degrees.js';
 
 const N = 11;
 
@@ -51,15 +59,10 @@ function fillMatrix(list, matrix) {
     const ROW_WIDTH = 20;
     const GAP = 5;
     const PADDING = 10;
-    list.style.maxWidth = `${
-        N * ROW_WIDTH + (N - 1) * GAP + PADDING * 2 + 2
-    }px`;
+    list.style.width = `${N * ROW_WIDTH + (N - 1) * GAP + PADDING * 2 + 2}px`;
     for (let i = 0; i < matrix.length; i++) {
         matrix[i].forEach((el) => {
-            list.insertAdjacentHTML(
-                'beforeend',
-                `<li id="${i}" class="item">${el}</li>`
-            );
+            list.insertAdjacentHTML('beforeend', `<li class="item">${el}</li>`);
         });
     }
 }
@@ -189,7 +192,7 @@ const multiplyMatrixIndivid = (matrix1, matrix2) => {
     return result;
 };
 
-const AdjacencyMatrix = (matrix) => {
+const reachabilityMatrix = (matrix) => {
     let result = structuredClone(matrix);
     for (let i = 2; i < matrix.length; i++) {
         const matrixUpper = matrixInPower(matrix, i);
@@ -201,7 +204,7 @@ const AdjacencyMatrix = (matrix) => {
     return matrixToBoolean(result);
 };
 
-const AdjacMatrix = AdjacencyMatrix(dirMatrix);
+const reachMatrix = reachabilityMatrix(dirMatrix);
 
 const matrixT = (matrix) => {
     const transposedMatrix = structuredClone(matrix);
@@ -214,8 +217,8 @@ const matrixT = (matrix) => {
 };
 
 const strongConnectMatrix = multiplyMatrixIndivid(
-    AdjacMatrix,
-    matrixT(AdjacMatrix)
+    reachMatrix,
+    matrixT(reachMatrix)
 );
 
 const findStrongComponents = (matrix) => {
@@ -234,68 +237,29 @@ const findStrongComponents = (matrix) => {
     }
     return components;
 };
-console.log(findStrongComponents(strongConnectMatrix));
+const strongComponents = findStrongComponents(strongConnectMatrix);
 
 //2
-
-const findUndirMatrixDegree = (matrix) => {
-    const res = [];
-    for (let i = 0; i < matrix.length; i++) {
-        let counter = 0;
-        for (let j = 0; j < matrix.length; j++) {
-            if (matrix[i][j]) {
-                if (i === j) counter++;
-                counter++;
-            }
-        }
-        console.log(`for V${i + 1} = ${counter}`);
-        res.push(counter);
-    }
-    return res;
-};
-const findDirMatrixTotalDegree = (matrix) => {
-    const [arr1, arr2] = Object.values(findMatrixDegrees(matrix));
-    return arr1.map((_, i) => arr1[i] + arr2[i]);
-};
-
-const findMatrixDegrees = (matrix) => {
-    const res = {
-        inDegree: [],
-        outDegree: [],
-    };
-    for (let i = 0; i < matrix.length; i++) {
-        let counterIn = 0;
-        let counterOut = 0;
-        for (let j = 0; j < matrix.length; j++) {
-            if (matrix[i][j]) counterOut++;
-            if (matrix[j][i]) counterIn++;
-        }
-        console.log(`for V${i + 1} indegree = ${counterIn}`);
-        console.log(`for V${i + 1} outdegree = ${counterOut}`);
-        res.inDegree.push(counterIn);
-        res.outDegree.push(counterOut);
-    }
-    return res;
-};
-
-const isRegularMatrix = (degrees) => {
-    return degrees.every((el) => degrees[0] === el);
-};
-
-const findIsolatedVertices = (degrees) => {
-    const res = [];
-    degrees.forEach((el, i) => el === 0 && res.push(`V${i + 1}`));
-    return res;
-};
-const findHangingVertices = (degrees) => {
-    const res = [];
-    degrees.forEach((el, i) => el === 1 && res.push(`V${i + 1}`));
-    return res;
-};
-const degreesMat = findDirMatrixTotalDegree(mat);
+const degreesMat = findDirMatrixTotalDegree(dirMatrix);
 console.log(degreesMat);
 findUndirMatrixDegree(unDirMatrix);
-findMatrixDegrees(mat);
-console.log(isRegularMatrix(mat));
+findMatrixDegrees(dirMatrix);
+console.log(isRegularMatrix(dirMatrix));
 console.log(findIsolatedVertices(degreesMat));
 console.log(findHangingVertices(degreesMat));
+
+const list3 = document.querySelector('.reachmatrix');
+const list4 = document.querySelector('.strongmatrix');
+fillMatrix(list3, reachMatrix);
+fillMatrix(list4, strongConnectMatrix);
+
+const list5 = document.querySelector('.strong-components-list');
+
+for (const key in strongComponents) {
+    list5.insertAdjacentHTML(
+        'beforeend',
+        `<li class="component">${key} = {${strongComponents[key].join(
+            ', '
+        )}}</li>`
+    );
+}
