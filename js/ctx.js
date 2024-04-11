@@ -20,6 +20,8 @@ export const ctx1 = canvas.getContext('2d');
 normalizeCtx(ctx1, canvas);
 
 export const canvasComponents = document.getElementById('canvas-components');
-canvasComponents.width = document.querySelector('.right-part').offsetWidth;
 export const ctx2 = canvasComponents.getContext('2d');
-normalizeCtx(ctx2, canvasComponents);
+window.addEventListener('DOMContentLoaded', () => {
+    canvasComponents.width = document.querySelector('.right-part').offsetWidth;
+    normalizeCtx(ctx2, canvasComponents);
+});

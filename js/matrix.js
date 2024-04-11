@@ -113,8 +113,6 @@ const fillMatrix = (list, matrix) => {
 export {
     generateDirMatrix,
     getUndirMatrix,
-    multiplyMatrix,
-    matrixInPower,
     multiplyMatrixIndivid,
     reachabilityMatrix,
     matrixT,

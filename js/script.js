@@ -1,55 +1,29 @@
 import {
-    vertices,
-    drawConnection,
-    drawArc,
-    condensationGraph,
+    drawConnectDirMatrix,
+    drawConnectUnDirMatrix,
+    drawCondensationGraph,
 } from './draw.js';
-import { resetCanvas } from './ctx.js';
+import { ctx2, resetCanvas } from './ctx.js';
 import { findRoutes, fillRoutes } from './routes.js';
 import {
     findStrongComponents,
     findStrongConnections,
 } from './strongComponents.js';
-// import {
-//     findUndirMatrixDegree,
-//     findDirMatrixTotalDegree,
-//     findMatrixDegrees,
-//     isRegularMatrix,
-//     findIsolatedVertices,
-//     findHangingVertices,
-// } from './degrees.js';
+import {
+    findUndirMatrixDegree,
+    findDirMatrixTotalDegree,
+    isRegularMatrix,
+    findIsolatedVertices,
+    findHangingVertices,
+} from './degrees.js';
 import {
     generateDirMatrix,
     getUndirMatrix,
-    multiplyMatrix,
-    matrixInPower,
     multiplyMatrixIndivid,
     reachabilityMatrix,
     matrixT,
     fillMatrix,
 } from './matrix.js';
-
-const connectUnDirMatrix = (matrix) => {
-    for (let i = 0; i < matrix.length; i++) {
-        for (let j = i; j < matrix.length; j++) {
-            if (matrix[i][j]) {
-                drawConnection(vertices[i], vertices[j]);
-            }
-        }
-    }
-};
-
-const connectDirMatrix = (matrix) => {
-    for (let i = 0; i < matrix.length; i++) {
-        for (let j = 0; j < matrix.length; j++) {
-            if (matrix[i][j]) {
-                if (matrix[j][i] && i > j)
-                    drawArc(vertices[i], vertices[j], true);
-                else drawConnection(vertices[i], vertices[j], true);
-            }
-        }
-    }
-};
 
 const dirMatrix = generateDirMatrix();
 const unDirMatrix = getUndirMatrix(dirMatrix);
@@ -76,11 +50,11 @@ const btnUnDirMatrix = document.querySelector('.btn-undirmatrix');
 
 btnDirMatrix.addEventListener('click', () => {
     resetCanvas();
-    connectDirMatrix(dirMatrix);
+    drawConnectDirMatrix(dirMatrix);
 });
 btnUnDirMatrix.addEventListener('click', () => {
     resetCanvas();
-    connectUnDirMatrix(unDirMatrix);
+    drawConnectUnDirMatrix(unDirMatrix);
 });
 
 const AllRoutes2 = findRoutes(dirMatrix, 2);
@@ -106,13 +80,15 @@ for (const key in strongComponents) {
 }
 
 const connections = findStrongConnections(strongComponents, dirMatrix);
-condensationGraph(connections);
 
-//2
-// const degreesMat = findDirMatrixTotalDegree(dirMatrix);
-// console.log(degreesMat);
-// findUndirMatrixDegree(unDirMatrix);
-// findMatrixDegrees(dirMatrix);
-// console.log(isRegularMatrix(dirMatrix));
-// console.log(findIsolatedVertices(degreesMat));
-// console.log(findHangingVertices(degreesMat));
+window.addEventListener('DOMContentLoaded', () => {
+    drawCondensationGraph(connections, ctx2);
+});
+
+//For console
+
+const degreesMatix = findDirMatrixTotalDegree(dirMatrix);
+findUndirMatrixDegree(unDirMatrix);
+isRegularMatrix(dirMatrix);
+findIsolatedVertices(degreesMatix);
+findHangingVertices(degreesMatix);

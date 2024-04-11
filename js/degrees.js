@@ -1,4 +1,5 @@
 export const findUndirMatrixDegree = (matrix) => {
+    console.log('The Degree of undir matrix:');
     const res = [];
     for (let i = 0; i < matrix.length; i++) {
         let counter = 0;
@@ -8,17 +9,22 @@ export const findUndirMatrixDegree = (matrix) => {
                 counter++;
             }
         }
-        console.log(`for V${i + 1} = ${counter}`);
+        console.log(`V${i + 1} = ${counter}`);
         res.push(counter);
     }
     return res;
 };
 export const findDirMatrixTotalDegree = (matrix) => {
     const [arr1, arr2] = Object.values(findMatrixDegrees(matrix));
-    return arr1.map((_, i) => arr1[i] + arr2[i]);
+    console.log('The Degree of dir matrix:');
+    return arr1.map((_, i) => {
+        console.log(`V${i + 1} = ${arr1[i] + arr2[i]}`);
+        return arr1[i] + arr2[i];
+    });
 };
 
 export const findMatrixDegrees = (matrix) => {
+    console.log('The indegree and outdegree of dir matrix:');
     const res = {
         inDegree: [],
         outDegree: [],
@@ -39,16 +45,29 @@ export const findMatrixDegrees = (matrix) => {
 };
 
 export const isRegularMatrix = (degrees) => {
-    return degrees.every((el) => degrees[0] === el);
+    const res = degrees.every((el) => degrees[0] === el);
+    if (res) console.log('Matrix is regular');
+    else console.log('Matrix is not regular');
+    return res;
 };
 
 export const findIsolatedVertices = (degrees) => {
     const res = [];
     degrees.forEach((el, i) => el === 0 && res.push(`V${i + 1}`));
+    console.log(
+        `The list of hanging vertices: ${
+            res.length === 0 ? 'list is empty' : res
+        }`
+    );
     return res;
 };
 export const findHangingVertices = (degrees) => {
     const res = [];
     degrees.forEach((el, i) => el === 1 && res.push(`V${i + 1}`));
+    console.log(
+        `The list of hanging vertices: ${
+            res.length === 0 ? 'list is empty' : res
+        }`
+    );
     return res;
 };

@@ -113,37 +113,68 @@ const drawArc = (ver1, ver2, isArrow = false) => {
     isArrow && drawArrow(middleX, middleY, ver2.x, ver2.y);
 };
 
-const condensationGraph = (components) => {
+const drawConnectUnDirMatrix = (matrix) => {
+    for (let i = 0; i < matrix.length; i++) {
+        for (let j = i; j < matrix.length; j++) {
+            if (matrix[i][j]) {
+                drawConnection(vertices[i], vertices[j]);
+            }
+        }
+    }
+};
+
+const drawConnectDirMatrix = (matrix) => {
+    for (let i = 0; i < matrix.length; i++) {
+        for (let j = 0; j < matrix.length; j++) {
+            if (matrix[i][j]) {
+                if (matrix[j][i] && i > j)
+                    drawArc(vertices[i], vertices[j], true);
+                else drawConnection(vertices[i], vertices[j], true);
+            }
+        }
+    }
+};
+
+const drawCondensationGraph = (components, ctx) => {
     const n = Object.keys(components).length;
-    ctx2.clearRect(0, 0, canvas.width, canvas.height);
+
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
     const radius =
         Math.min(canvasComponents.width, canvasComponents.height) / 3;
     const angleStep = (2 * Math.PI) / n;
 
-    const ks = [];
+    const vertices = [];
     for (let i = 0; i < n; i++) {
         const angle = i * angleStep;
         const x = radius * Math.cos(angle);
         const y = radius * Math.sin(angle);
-        ks.push(new StrongVertex(x, y, 35, Object.keys(components)[i], ctx2));
-    }
-
-    for (let i = 0; i < ks.length; i++) {
-        ks[i].connections = components[ks[i].name];
-    }
-
-    for (const key in components) {
-        const k = ks.find((el) => el.name === key);
-        k.connections = components[key].map((ver) =>
-            ks.find((el) => el.name === ver)
+        vertices.push(
+            new StrongVertex(x, y, RADIUS, Object.keys(components)[i], ctx)
         );
     }
 
-    ks.forEach((ver) => ver.drawVertex());
-    ks.forEach((ver) => {
-        ver.connections.forEach((el) => drawLine(ver, el, true, ctx2));
+    for (let i = 0; i < vertices.length; i++) {
+        vertices[i].connections = components[vertices[i].name];
+    }
+
+    for (const key in components) {
+        const K = vertices.find((el) => el.name === key);
+        K.connections = components[key].map((ver) =>
+            vertices.find((el) => el.name === ver)
+        );
+    }
+
+    vertices.forEach((ver) => ver.drawVertex());
+    vertices.forEach((ver) => {
+        ver.connections.forEach((el) => drawLine(ver, el, true, ctx));
     });
 };
 
-export { drawArc, drawConnection, condensationGraph };
+export {
+    drawArc,
+    drawConnection,
+    drawCondensationGraph,
+    drawConnectDirMatrix,
+    drawConnectUnDirMatrix,
+};
 export const vertices = fillVertexes();
