@@ -1,30 +1,8 @@
-const canvas = document.getElementById('canvas');
-const ctx = canvas.getContext('2d');
-
-const RADIUS = 30;
-const N = 11;
-
-ctx.translate(canvas.width / 2, canvas.height / 2);
-ctx.globalCompositeOperation = 'destination-over';
-ctx.textAlign = 'center';
-ctx.textBaseline = 'middle';
-ctx.font = '22px serif';
-
-class Vertex {
-    constructor(x, y, r, number) {
-        (this.x = x), (this.y = y);
-        this.r = r;
-        this.number = number;
-    }
-    drawVertex() {
-        ctx.beginPath();
-        ctx.fillStyle = '#ffffff';
-        ctx.fillText(this.number, this.x, this.y);
-        ctx.fillStyle = 'black';
-        ctx.arc(this.x, this.y, this.r, 0, 2 * Math.PI);
-        ctx.fill();
-    }
-}
+import { Vertex, StrongVertex } from './vertex.js';
+import { N } from './matrix.js';
+import { ctx1, canvas } from './ctx.js';
+import { ctx2, canvasComponents } from './ctx.js';
+import { RADIUS } from './consts.js';
 
 const fillVertexes = () => {
     const arrayOfVertex = [];
@@ -35,24 +13,24 @@ const fillVertexes = () => {
     let curX = startX;
     for (let i = 1; i <= N - 1; i++) {
         if (i === 5) {
-            arrayOfVertex.push(new Vertex(-startX, 0, RADIUS, i));
+            arrayOfVertex.push(new Vertex(-startX, 0, RADIUS, i, ctx1));
             curY = -curY;
             interval *= -1;
             curX = -startX;
             continue;
         }
         if (i === 10) {
-            arrayOfVertex.push(new Vertex(startX, 0, RADIUS, i));
+            arrayOfVertex.push(new Vertex(startX, 0, RADIUS, i, ctx1));
             break;
         }
-        arrayOfVertex.push(new Vertex(curX, curY, RADIUS, i));
+        arrayOfVertex.push(new Vertex(curX, curY, RADIUS, i, ctx1));
         curX += interval;
     }
-    arrayOfVertex.push(new Vertex(0, 0, RADIUS, 11));
+    arrayOfVertex.push(new Vertex(0, 0, RADIUS, 11, ctx1));
     return arrayOfVertex;
 };
 
-const drawArrow = (fromX, fromY, toX, toY) => {
+const drawArrow = (fromX, fromY, toX, toY, ctx = ctx1) => {
     const height = RADIUS / 2;
     const angle = Math.atan2(toY - fromY, toX - fromX);
     const arrowX = toX - RADIUS * Math.cos(angle);
@@ -71,27 +49,27 @@ const drawArrow = (fromX, fromY, toX, toY) => {
     ctx.fill();
 };
 
-const drawLine = (ver1, ver2, isArrow) => {
+const drawLine = (ver1, ver2, isArrow, ctx = ctx1) => {
     ctx.beginPath();
     ctx.moveTo(ver1.x, ver1.y);
     ctx.lineTo(ver2.x, ver2.y);
     ctx.stroke();
-    isArrow && drawArrow(ver1.x, ver1.y, ver2.x, ver2.y);
+    isArrow && drawArrow(ver1.x, ver1.y, ver2.x, ver2.y, ctx);
 };
 
 const drawSelfLine = (ver, isArrow) => {
     let height = 50;
     if (ver.y > 0) height = -height;
-    ctx.beginPath();
-    ctx.moveTo(ver.x, ver.y);
-    ctx.lineTo(ver.x - RADIUS, ver.y - height);
-    ctx.lineTo(ver.x + RADIUS, ver.y - height);
-    ctx.closePath();
-    ctx.stroke();
+    ctx1.beginPath();
+    ctx1.moveTo(ver.x, ver.y);
+    ctx1.lineTo(ver.x - RADIUS, ver.y - height);
+    ctx1.lineTo(ver.x + RADIUS, ver.y - height);
+    ctx1.closePath();
+    ctx1.stroke();
     isArrow && drawArrow(ver.x + RADIUS, ver.y - height, ver.x, ver.y);
 };
 
-export const drawConnection = (ver1, ver2, isArrow = false) => {
+const drawConnection = (ver1, ver2, isArrow = false) => {
     if (ver1 === ver2) {
         drawSelfLine(ver1, isArrow);
         return;
@@ -118,7 +96,7 @@ export const drawConnection = (ver1, ver2, isArrow = false) => {
     }
 };
 
-export const drawArc = (ver1, ver2, isArrow = false) => {
+const drawArc = (ver1, ver2, isArrow = false) => {
     let middleX = (ver1.x + ver2.x) / 2;
     let middleY = (ver1.y + ver2.y) / 2;
     let radius = Math.max(Math.abs(ver2.x - ver1.x), Math.abs(ver2.y - ver1.y));
@@ -126,20 +104,46 @@ export const drawArc = (ver1, ver2, isArrow = false) => {
     middleX += (ver2.y - ver1.y) / 5;
     middleY += (ver2.x - ver1.x) / 5;
 
-    ctx.beginPath();
-    ctx.moveTo(ver1.x, ver1.y);
-    ctx.arcTo(middleX, middleY, ver2.x, ver2.y, radius);
-    ctx.lineTo(ver2.x, ver2.y);
-    ctx.stroke();
+    ctx1.beginPath();
+    ctx1.moveTo(ver1.x, ver1.y);
+    ctx1.arcTo(middleX, middleY, ver2.x, ver2.y, radius);
+    ctx1.lineTo(ver2.x, ver2.y);
+    ctx1.stroke();
 
     isArrow && drawArrow(middleX, middleY, ver2.x, ver2.y);
 };
 
-export const resetCanvas = () => {
-    ctx.setTransform(1, 0, 0, 1, 0, 0);
-    ctx.clearRect(0, 0, canvas.width, canvas.height);
-    ctx.translate(canvas.width / 2, canvas.height / 2);
-    vertices.forEach((el) => el.drawVertex());
+const condensationGraph = (components) => {
+    const n = Object.keys(components).length;
+    ctx2.clearRect(0, 0, canvas.width, canvas.height);
+    const radius =
+        Math.min(canvasComponents.width, canvasComponents.height) / 3;
+    const angleStep = (2 * Math.PI) / n;
+
+    const ks = [];
+    for (let i = 0; i < n; i++) {
+        const angle = i * angleStep;
+        const x = radius * Math.cos(angle);
+        const y = radius * Math.sin(angle);
+        ks.push(new StrongVertex(x, y, 35, Object.keys(components)[i], ctx2));
+    }
+
+    for (let i = 0; i < ks.length; i++) {
+        ks[i].connections = components[ks[i].name];
+    }
+
+    for (const key in components) {
+        const k = ks.find((el) => el.name === key);
+        k.connections = components[key].map((ver) =>
+            ks.find((el) => el.name === ver)
+        );
+    }
+
+    ks.forEach((ver) => ver.drawVertex());
+    ks.forEach((ver) => {
+        ver.connections.forEach((el) => drawLine(ver, el, true, ctx2));
+    });
 };
 
+export { drawArc, drawConnection, condensationGraph };
 export const vertices = fillVertexes();

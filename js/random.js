@@ -1,4 +1,4 @@
-const SEED = 3118;
+import { SEED } from './consts.js';
 
 Math.seedrandom(SEED);
 const rand = () => {
