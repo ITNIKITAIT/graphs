@@ -89,6 +89,6 @@ window.addEventListener('DOMContentLoaded', () => {
 
 const degreesMatix = findDirMatrixTotalDegree(dirMatrix);
 findUndirMatrixDegree(unDirMatrix);
-isRegularMatrix(dirMatrix);
+isRegularMatrix(degreesMatix);
 findIsolatedVertices(degreesMatix);
 findHangingVertices(degreesMatix);

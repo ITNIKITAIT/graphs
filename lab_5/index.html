@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <link rel="stylesheet" href="style.css" />
+        <title>Graphs</title>
+    </head>
+    <body>
+        <div class="canva-wrapper">
+            <canvas width="900" height="700" id="canvas">\</canvas>
+            <button class="createdfs-btn">DFS</button>
+            <button class="createbfs-btn">BFS</button>
+            <button class="nextDfs-btn">Next Dfs</button>
+            <button class="nextBfs-btn">Next Bfs</button>
+        </div>
+        <div class="matrix__wrapper">
+            <div class="matrix">
+                <p class="title">dirMatrix</p>
+                <ul class="dirmatrix"></ul>
+                <button class="btn btn-dirmatrix">DRAW</button>
+            </div>
+            <div class="matrix">
+                <p class="title">unDirMatrix</p>
+                <ul class="undirmatrix"></ul>
+                <button class="btn btn-undirmatrix">DRAW</button>
+            </div>
+        </div>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/seedrandom/3.0.5/seedrandom.min.js"></script>
+        <script type="module" src="./js/script.js"></script>
+    </body>
+</html>

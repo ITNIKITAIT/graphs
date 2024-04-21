@@ -1,0 +1,133 @@
+body {
+    margin: 0;
+    padding: 0;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    gap: 50px;
+}
+
+ul {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+
+p,
+div {
+    padding: 0;
+    margin: 0;
+}
+
+* {
+    -webkit-box-sizing: border-box;
+    box-sizing: border-box;
+}
+
+.canva-wrapper {
+    position: relative;
+}
+
+#canvas {
+    border: 2px solid black;
+    border-radius: 20px;
+    position: relative;
+}
+
+.nextDfs-btn,
+.nextBfs-btn,
+.createdfs-btn,
+.createbfs-btn {
+    position: absolute;
+    transform: translate(-50%, 50%);
+    border: 1px solid black;
+    border-radius: 20px;
+    min-width: 150px;
+    font-size: 20px;
+    padding: 15px 20px;
+    cursor: pointer;
+    background-color: #fff;
+}
+
+.nextDfs-btn,
+.nextBfs-btn {
+    left: 50%;
+    bottom: 0;
+}
+
+.createbfs-btn {
+    left: 60%;
+    top: 0;
+    transform: translateY(-50%);
+    border-radius: 0;
+}
+.createdfs-btn {
+    right: 60%;
+    top: 0;
+    transform: translateY(-50%);
+    border-radius: 0;
+}
+
+.nextDfs-btn:hover,
+.nextBfs-btn:hover,
+.createdfs-btn:hover,
+.createbfs-btn:hover {
+    background-color: #efefef;
+}
+
+.matrix__wrapper {
+    min-width: 600px;
+}
+
+.matrix {
+    padding: 15px;
+    padding: 10px 0;
+}
+
+.title {
+    font-size: 28px;
+    color: black;
+    text-align: center;
+}
+
+.dirmatrix,
+.undirmatrix {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 5px;
+    margin: auto;
+    margin-top: 5px;
+    border: 1px solid rgb(108, 108, 108);
+    padding: 10px;
+}
+
+.item {
+    width: 20px;
+    text-align: center;
+}
+
+.btn {
+    margin: auto;
+    background-color: transparent;
+    border: 1px solid rgb(20, 20, 20);
+    border-radius: 5px;
+    font-size: 20px;
+    padding: 10px 20px;
+    cursor: pointer;
+    width: fit-content;
+    display: block;
+    margin-top: 10px;
+}
+
+.btn:hover {
+    background-color: #efefef;
+}
+
+.btn-active {
+    background-color: rgb(72, 203, 72);
+}
+
+.btn-active:hover {
+    background-color: rgb(22, 159, 22);
+}
