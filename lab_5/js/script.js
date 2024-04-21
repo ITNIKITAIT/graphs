@@ -1,6 +1,6 @@
 import { mulmr } from './random.js';
 import { vertices, drawConnection, resetCanvas, drawArc } from './graph.js';
-import { wrapperBfs, wrapperDfs } from './traversal.js';
+import { matrixBfs, matrixDfs, wrapperBfs, wrapperDfs } from './traversal.js';
 
 const N = 11;
 vertices.forEach((ver) => ver.drawVertex());
@@ -102,6 +102,10 @@ const dfsFunc = () => {
     resetCanvas();
     let dfsIterator = wrapperDfs(dirMatrix);
     nextDfsBtn.addEventListener('click', () => {
+        if (vertices.every((ver) => ver.state === 'opened')) {
+            console.log('matrixDfs:');
+            console.log(matrixDfs);
+        }
         if (!dfsIterator) {
             for (let i = 0; i < vertices.length; i++) {
                 if (vertices[i].state === 'new') {
@@ -129,6 +133,10 @@ const bfsFunc = () => {
     resetCanvas();
     let bfsIterator = wrapperBfs(dirMatrix);
     nextBfsBtn.addEventListener('click', () => {
+        if (vertices.every((ver) => ver.state === 'opened')) {
+            console.log('matrixBfs:');
+            console.log(matrixBfs);
+        }
         if (!bfsIterator) {
             for (let i = 0; i < vertices.length; i++) {
                 if (vertices[i].state === 'new') {
