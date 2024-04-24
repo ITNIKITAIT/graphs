@@ -55,7 +55,7 @@ export const findIsolatedVertices = (degrees) => {
     const res = [];
     degrees.forEach((el, i) => el === 0 && res.push(`V${i + 1}`));
     console.log(
-        `The list of hanging vertices: ${
+        `The list of isolated vertices: ${
             res.length === 0 ? 'list is empty' : res
         }`
     );

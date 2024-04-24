@@ -1,4 +1,4 @@
-import { drawConnection, vertices } from './graph.js';
+import { drawConnection, vertices } from './draw.js';
 
 const renderVertices = (stack) => {
     vertices.forEach((el) => {

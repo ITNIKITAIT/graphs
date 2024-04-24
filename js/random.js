@@ -13,6 +13,7 @@ export const mulmr = () => {
     const k1 = 1.0 - n3 * 0.02 - n4 * 0.005 - 0.25;
     const k2 = 1.0 - n3 * 0.01 - n4 * 0.01 - 0.3;
     const k3 = 1.0 - n3 * 0.005 - n4 * 0.005 - 0.27;
+    const k5 = 1.0 - n3 * 0.01 - n4 * 0.005 - 0.15;
 
-    return Math.floor(rand() * k2);
+    return Math.floor(rand() * k5);
 };

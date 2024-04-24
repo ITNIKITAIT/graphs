@@ -2,6 +2,7 @@ import {
     drawConnectDirMatrix,
     drawConnectUnDirMatrix,
     drawCondensationGraph,
+    vertices,
 } from './draw.js';
 import { ctx2, resetCanvas } from './ctx.js';
 import { findRoutes, fillRoutes } from './routes.js';
@@ -24,6 +25,12 @@ import {
     matrixT,
     fillMatrix,
 } from './matrix.js';
+import {
+    wrapperBfs,
+    wrapperDfs,
+    matrixBfs,
+    matrixDfs,
+} from '../js/traversal.js';
 
 const dirMatrix = generateDirMatrix();
 const unDirMatrix = getUndirMatrix(dirMatrix);
@@ -92,3 +99,77 @@ findUndirMatrixDegree(unDirMatrix);
 isRegularMatrix(degreesMatix);
 findIsolatedVertices(degreesMatix);
 findHangingVertices(degreesMatix);
+
+// Buttons for dfs, bfs
+
+const dfsButton = document.querySelector('.createdfs-btn');
+const bfsButton = document.querySelector('.createbfs-btn');
+const nextDfsBtn = document.querySelector('.nextDfs-btn');
+const nextBfsBtn = document.querySelector('.nextBfs-btn');
+nextDfsBtn.style.display = 'none';
+nextBfsBtn.style.display = 'none';
+
+// DFS
+
+const dfsFunc = () => {
+    resetCanvas();
+    let dfsIterator = wrapperDfs(dirMatrix);
+    nextDfsBtn.addEventListener('click', () => {
+        if (vertices.every((ver) => ver.state === 'opened')) {
+            console.log('matrixDfs:');
+            console.log(matrixDfs);
+        }
+        if (!dfsIterator) {
+            for (let i = 0; i < vertices.length; i++) {
+                if (vertices[i].state === 'new') {
+                    dfsIterator = wrapperDfs(dirMatrix, i);
+                    break;
+                }
+            }
+        } else dfsIterator = dfsIterator();
+    });
+};
+
+dfsButton.addEventListener('click', () => {
+    dfsButton.classList.add('btn-active');
+    if (bfsButton.classList.contains('btn-active')) {
+        bfsButton.classList.remove('btn-active');
+    }
+    nextDfsBtn.style.display = 'block';
+    nextBfsBtn.style.display = 'none';
+    dfsFunc();
+});
+
+// BFS
+
+const bfsFunc = () => {
+    resetCanvas();
+    let bfsIterator = wrapperBfs(dirMatrix);
+    nextBfsBtn.addEventListener('click', () => {
+        if (vertices.every((ver) => ver.state === 'opened')) {
+            console.log('matrixBfs:');
+            console.log(matrixBfs);
+        }
+        if (!bfsIterator) {
+            for (let i = 0; i < vertices.length; i++) {
+                if (vertices[i].state === 'new') {
+                    bfsIterator = wrapperBfs(dirMatrix, i);
+                    break;
+                }
+            }
+        } else bfsIterator = bfsIterator();
+    });
+};
+
+bfsButton.addEventListener('click', () => {
+    bfsButton.classList.add('btn-active');
+    if (dfsButton.classList.contains('btn-active')) {
+        dfsButton.classList.remove('btn-active');
+    }
+    nextDfsBtn.style.display = 'none';
+    nextBfsBtn.style.display = 'block';
+    bfsFunc();
+});
+
+vertices[10].state = 'opened';
+vertices[0].state = 'opened';

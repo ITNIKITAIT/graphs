@@ -160,3 +160,56 @@ tr:nth-child(even) {
     color: black;
     padding: 10px 0;
 }
+
+.canva-wrapper {
+    position: relative;
+}
+
+.nextDfs-btn,
+.nextBfs-btn,
+.createdfs-btn,
+.createbfs-btn {
+    position: absolute;
+    transform: translate(-50%, 50%);
+    border: 1px solid black;
+    border-radius: 20px;
+    min-width: 150px;
+    font-size: 20px;
+    padding: 15px 20px;
+    cursor: pointer;
+    background-color: #fff;
+}
+
+.nextDfs-btn,
+.nextBfs-btn {
+    left: 50%;
+    bottom: 0;
+}
+
+.createbfs-btn {
+    left: 60%;
+    top: 0;
+    transform: translateY(-50%);
+    border-radius: 0;
+}
+.createdfs-btn {
+    right: 60%;
+    top: 0;
+    transform: translateY(-50%);
+    border-radius: 0;
+}
+
+.nextDfs-btn:hover,
+.nextBfs-btn:hover,
+.createdfs-btn:hover,
+.createbfs-btn:hover {
+    background-color: #efefef;
+}
+
+.btn-active {
+    background-color: rgb(72, 203, 72);
+}
+
+.btn-active:hover {
+    background-color: rgb(22, 159, 22);
+}

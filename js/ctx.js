@@ -4,7 +4,10 @@ export const resetCanvas = () => {
     ctx1.setTransform(1, 0, 0, 1, 0, 0);
     ctx1.clearRect(0, 0, canvas.width, canvas.height);
     ctx1.translate(canvas.width / 2, canvas.height / 2);
-    vertices.forEach((el) => el.drawVertex());
+    vertices.forEach((el) => {
+        el.state = 'new';
+        el.drawVertex();
+    });
 };
 
 const normalizeCtx = (ctx, canva) => {
