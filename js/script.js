@@ -194,6 +194,3 @@ bfsButton.addEventListener('click', () => {
     nextBfsBtn.style.display = 'block';
     bfsFunc();
 });
-
-vertices[10].state = 'opened';
-vertices[0].state = 'opened';
