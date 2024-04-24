@@ -21,14 +21,16 @@ const createClearMatrix = (n) => {
 };
 
 export const matrixDfs = createClearMatrix(vertices.length);
+export const arrNumberingDfs = [];
 
 export const wrapperDfs = (matrix, start = 0) => {
-    console.log(
-        'Start printing correspondence of vertex numbers and their new numbering (DFS))'
-    );
+    let count = 1;
     let currentRow = start;
     const stack = [vertices[start]];
+
     vertices[start].newState = 'current';
+    arrNumberingDfs.push([start + 1, count++]);
+
     const dfs = () => {
         const row = currentRow;
         if (stack.length === 0) return;
@@ -39,6 +41,7 @@ export const wrapperDfs = (matrix, start = 0) => {
                 stack.push(vertices[j]);
                 renderVertices(stack);
                 console.log(`From V${currentRow + 1} to V${j + 1}`);
+                arrNumberingDfs.push([j + 1, count++]);
                 matrixDfs[currentRow][j] = 1;
                 currentRow = j;
                 return dfs;
@@ -56,14 +59,16 @@ export const wrapperDfs = (matrix, start = 0) => {
 };
 
 export const matrixBfs = createClearMatrix(vertices.length);
+export const arrNumberingBfs = [];
 
 export const wrapperBfs = (matrix, start = 0) => {
-    console.log(
-        'Start printing correspondence of vertex numbers and their new numbering (BFS))'
-    );
+    let count = 1;
     let currentRow = start;
     const queue = [vertices[start]];
+
     vertices[start].newState = 'current';
+    arrNumberingBfs.push([start + 1, count++]);
+
     const bfs = () => {
         const row = currentRow;
         if (queue.length === 0) return;
@@ -74,6 +79,7 @@ export const wrapperBfs = (matrix, start = 0) => {
                 queue.unshift(vertices[j]);
                 renderVertices(queue);
                 console.log(`From V${currentRow + 1} to V${j + 1}`);
+                arrNumberingBfs.push([j + 1, count++]);
                 matrixBfs[currentRow][j] = 1;
                 return bfs;
             }

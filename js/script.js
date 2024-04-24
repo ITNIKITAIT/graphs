@@ -30,6 +30,8 @@ import {
     wrapperDfs,
     matrixBfs,
     matrixDfs,
+    arrNumberingDfs,
+    arrNumberingBfs,
 } from '../js/traversal.js';
 
 const dirMatrix = generateDirMatrix();
@@ -118,6 +120,17 @@ const dfsFunc = () => {
         if (vertices.every((ver) => ver.state === 'opened')) {
             console.log('matrixDfs:');
             console.log(matrixDfs);
+            console.log(
+                'A list of correspondence between vertex numbers and their new numbering (DFS)'
+            );
+            const sortedList = arrNumberingDfs.sort(
+                (arr1, arr2) => arr1[0] - arr2[0]
+            );
+            sortedList.forEach((el) => {
+                console.log(
+                    `Vertex index: ${el[0]}, vertex number by detour: ${el[1]}`
+                );
+            });
         }
         if (!dfsIterator) {
             for (let i = 0; i < vertices.length; i++) {
@@ -149,6 +162,17 @@ const bfsFunc = () => {
         if (vertices.every((ver) => ver.state === 'opened')) {
             console.log('matrixBfs:');
             console.log(matrixBfs);
+            console.log(
+                'A list of correspondence between vertex numbers and their new numbering (BFS)'
+            );
+            const sortedList = arrNumberingBfs.sort(
+                (arr1, arr2) => arr1[0] - arr2[0]
+            );
+            sortedList.forEach((el) => {
+                console.log(
+                    `Vertex index: ${el[0]}, vertex number by detour: ${el[1]}`
+                );
+            });
         }
         if (!bfsIterator) {
             for (let i = 0; i < vertices.length; i++) {
