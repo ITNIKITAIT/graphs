@@ -3,6 +3,7 @@ import {
     drawConnectUnDirMatrix,
     drawCondensationGraph,
     vertices,
+    drawMinSkelet,
 } from './draw.js';
 import { ctx2, resetCanvas } from './ctx.js';
 import { findRoutes, fillRoutes } from './routes.js';
@@ -25,6 +26,7 @@ import {
     matrixT,
     fillMatrix,
     matrixW,
+    createListEdges,
 } from './matrix.js';
 import {
     wrapperBfs,
@@ -197,3 +199,11 @@ bfsButton.addEventListener('click', () => {
 });
 
 const weightMatrix = matrixW(unDirMatrix);
+console.log(weightMatrix);
+const list = createListEdges(weightMatrix);
+console.log(list);
+
+const SkeletIterator = drawMinSkelet(list);
+document.addEventListener('keydown', () => {
+    SkeletIterator();
+});

@@ -178,3 +178,43 @@ export {
     drawConnectUnDirMatrix,
 };
 export const vertices = fillVertexes();
+
+export const drawMinSkelet = (list) => {
+    let totalWeight = 0;
+    const components = [];
+    vertices.forEach((ver, i) => (components[i] = [ver]));
+
+    const unionComponents = (index1, index2) => {
+        components[index1] = components[index1].concat(components[index2]);
+        components.splice(index2, 1);
+    };
+    const findComponent = (vertex) => {
+        for (let i = 0; i < components.length; i++) {
+            if (components[i].includes(vertex)) {
+                return i;
+            }
+        }
+    };
+    const iterator = () => {
+        if (vertices.every((ver) => ver.state === 'opened')) {
+            console.log(totalWeight);
+            return;
+        }
+        for (const { weight, firstVer, secondVer } of list) {
+            const ver1 = vertices[firstVer];
+            const ver2 = vertices[secondVer];
+            const index1 = findComponent(ver1);
+            const index2 = findComponent(ver2);
+            if (index1 !== index2) {
+                totalWeight += weight;
+                drawConnection(ver1, ver2, true);
+                unionComponents(index1, index2);
+                ver1.newState = 'opened';
+                ver2.newState = 'opened';
+                console.log(totalWeight);
+                return iterator;
+            }
+        }
+    };
+    return iterator;
+};
