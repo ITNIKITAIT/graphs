@@ -1,4 +1,5 @@
 import { drawConnection, vertices } from './draw.js';
+import { createClearMatrix } from './matrix.js';
 
 const renderVertices = (stack) => {
     vertices.forEach((el) => {
@@ -7,17 +8,6 @@ const renderVertices = (stack) => {
         }
         stack.at(-1).newState = 'current';
     });
-};
-
-const createClearMatrix = (n) => {
-    let matrix = [];
-    for (let i = 0; i < n; i++) {
-        matrix.push([]);
-        for (let j = 0; j < n; j++) {
-            matrix[i][j] = 0;
-        }
-    }
-    return matrix;
 };
 
 export const matrixDfs = createClearMatrix(vertices.length);

@@ -1,12 +1,23 @@
 import { mulmr } from './random.js';
 import { N } from './consts.js';
 
-const generateDirMatrix = () => {
+const createClearMatrix = (n) => {
+    let matrix = [];
+    for (let i = 0; i < n; i++) {
+        matrix.push([]);
+        for (let j = 0; j < n; j++) {
+            matrix[i][j] = 0;
+        }
+    }
+    return matrix;
+};
+
+const generateDirMatrix = (isW = false) => {
     const matrix = [];
     for (let i = 0; i < N; i++) {
         matrix.push([]);
         for (let j = 0; j < N; j++) {
-            matrix[i].push(mulmr());
+            matrix[i].push(mulmr(isW));
         }
     }
     return matrix;
@@ -110,12 +121,37 @@ const fillMatrix = (list, matrix) => {
     }
 };
 
+const matrixW = (unDirMatrix) => {
+    const matrixB = generateDirMatrix(true);
+    const matrixC = matrixB.map((row, i) =>
+        row.map((el, j) => Math.ceil(el * 100 * unDirMatrix[i][j]))
+    );
+    const matrixD = matrixC.map((row) => row.map((el) => (el > 0 ? 1 : 0)));
+    const matrixH = matrixD.map((row, i) =>
+        row.map((el, j) => (matrixD[i][j] !== matrixD[j][i] ? 1 : 0))
+    );
+    const matrixTr = matrixB.map((row, i) =>
+        row.map((_, j) => (i < j ? 1 : 0))
+    );
+    const matrixW = createClearMatrix(unDirMatrix.length);
+    for (let i = 0; i < matrixW.length; i++) {
+        for (let j = 0; j < i; j++) {
+            matrixW[i][j] = matrixW[j][i] =
+                (matrixD[i][j] + matrixH[i][j] * matrixTr[i][j]) *
+                matrixC[i][j];
+        }
+    }
+    console.log(matrixW);
+};
+
 export {
+    createClearMatrix,
     generateDirMatrix,
     getUndirMatrix,
     multiplyMatrixIndivid,
     reachabilityMatrix,
     matrixT,
     fillMatrix,
+    matrixW,
     N,
 };

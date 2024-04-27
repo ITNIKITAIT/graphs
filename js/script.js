@@ -24,6 +24,7 @@ import {
     reachabilityMatrix,
     matrixT,
     fillMatrix,
+    matrixW,
 } from './matrix.js';
 import {
     wrapperBfs,
@@ -194,3 +195,5 @@ bfsButton.addEventListener('click', () => {
     nextBfsBtn.style.display = 'block';
     bfsFunc();
 });
+
+const weightMatrix = matrixW(unDirMatrix);
