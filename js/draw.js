@@ -211,25 +211,28 @@ const drawMinSkelet = (list) => {
             }
         }
     };
+
+    let currentIndex = 0;
     const iterator = () => {
         if (components.length === 1) {
             console.log('Total weight sum = ' + totalWeight);
             return;
         }
-        for (const { weight, firstVer, secondVer } of list) {
-            const ver1 = vertices[firstVer];
-            const ver2 = vertices[secondVer];
-            const index1 = findComponent(ver1);
-            const index2 = findComponent(ver2);
-            if (index1 !== index2) {
-                totalWeight += weight;
-                drawConnection(ver1, ver2, true, weight);
-                unionComponents(index1, index2);
-                ver1.newState = 'opened';
-                ver2.newState = 'opened';
-                return iterator;
-            }
+        const { weight, firstVer, secondVer } = list[currentIndex];
+        const ver1 = vertices[firstVer];
+        const ver2 = vertices[secondVer];
+        const index1 = findComponent(ver1);
+        const index2 = findComponent(ver2);
+        if (index1 !== index2) {
+            totalWeight += weight;
+            drawConnection(ver1, ver2, true, weight);
+            unionComponents(index1, index2);
+            ver1.newState = 'opened';
+            ver2.newState = 'opened';
+            return iterator;
         }
+        currentIndex++;
+        iterator();
     };
     return iterator;
 };
