@@ -213,7 +213,7 @@ const drawMinSkelet = (list) => {
     };
     const iterator = () => {
         if (components.length === 1) {
-            console.log(totalWeight);
+            console.log('Total weight sum = ' + totalWeight);
             return;
         }
         for (const { weight, firstVer, secondVer } of list) {
