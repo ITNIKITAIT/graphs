@@ -1,5 +1,6 @@
 import { mulmr } from './random.js';
 import { N } from './consts.js';
+import { drawConnection, vertices } from './draw.js';
 
 const createClearMatrix = (n) => {
     let matrix = [];

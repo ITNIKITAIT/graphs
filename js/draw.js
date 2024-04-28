@@ -1,6 +1,6 @@
 import { Vertex, StrongVertex } from './vertex.js';
 import { N } from './matrix.js';
-import { ctx1, canvas } from './ctx.js';
+import { ctx1, canvas, resetCanvas } from './ctx.js';
 import { ctx2, canvasComponents } from './ctx.js';
 import { RADIUS } from './consts.js';
 
@@ -49,12 +49,14 @@ const drawArrow = (fromX, fromY, toX, toY, ctx = ctx1) => {
     ctx.fill();
 };
 
-const drawLine = (ver1, ver2, isArrow, ctx = ctx1) => {
+const drawLine = (ver1, ver2, isArrow, ctx = ctx1, weight = 0) => {
     ctx.beginPath();
     ctx.moveTo(ver1.x, ver1.y);
     ctx.lineTo(ver2.x, ver2.y);
     ctx.stroke();
     isArrow && drawArrow(ver1.x, ver1.y, ver2.x, ver2.y, ctx);
+    weight &&
+        drawWeight(weight, (ver1.x + ver2.x) / 2, (ver1.y + ver2.y) / 2, ctx1);
 };
 
 const drawSelfLine = (ver, isArrow) => {
@@ -69,7 +71,7 @@ const drawSelfLine = (ver, isArrow) => {
     isArrow && drawArrow(ver.x + RADIUS, ver.y - height, ver.x, ver.y);
 };
 
-const drawConnection = (ver1, ver2, isArrow = false) => {
+const drawConnection = (ver1, ver2, isArrow = false, weight = 0) => {
     if (ver1 === ver2) {
         drawSelfLine(ver1, isArrow);
         return;
@@ -79,38 +81,45 @@ const drawConnection = (ver1, ver2, isArrow = false) => {
         Math.round(ver1.y) === Math.round(ver2.y) &&
         Math.abs(ver1.number - ver2.number) != 1
     ) {
-        drawArc(ver1, ver2, isArrow);
+        drawArc(ver1, ver2, isArrow, weight);
     } else if (
         Math.round(ver1.x) === Math.round(ver2.x) &&
         Math.abs(ver1.number - ver2.number) != 1
     ) {
-        drawArc(ver1, ver2, isArrow);
+        drawArc(ver1, ver2, isArrow, weight);
     } else if (
         Math.abs(ver2.number - ver1.number) === 5 &&
         ver2.number != N &&
         ver1.number != N
     ) {
-        drawArc(ver1, ver2, isArrow);
+        drawArc(ver1, ver2, isArrow, weight);
     } else {
-        drawLine(ver1, ver2, isArrow);
+        drawLine(ver1, ver2, isArrow, ctx1, weight);
     }
 };
 
-const drawArc = (ver1, ver2, isArrow = false) => {
-    let middleX = (ver1.x + ver2.x) / 2;
-    let middleY = (ver1.y + ver2.y) / 2;
-    let radius = Math.max(Math.abs(ver2.x - ver1.x), Math.abs(ver2.y - ver1.y));
+const drawArc = (ver1, ver2, isArrow = false, weight = 0) => {
+    const middleX = (ver1.x + ver2.x) / 2;
+    const middleY = (ver1.y + ver2.y) / 2;
+    const radius = Math.max(
+        Math.abs(ver2.x - ver1.x),
+        Math.abs(ver2.y - ver1.y)
+    );
 
-    middleX += (ver2.y - ver1.y) / 5;
-    middleY += (ver2.x - ver1.x) / 5;
+    const arcX = (ver2.y - ver1.y) / 5 + middleX;
+    const arcY = (ver2.x - ver1.x) / 5 + middleY;
+
+    const rectX = (arcX + middleX) / 1.9;
+    const rectY = (arcY + middleY) / 1.9;
 
     ctx1.beginPath();
     ctx1.moveTo(ver1.x, ver1.y);
-    ctx1.arcTo(middleX, middleY, ver2.x, ver2.y, radius);
+    ctx1.arcTo(arcX, arcY, ver2.x, ver2.y, radius);
     ctx1.lineTo(ver2.x, ver2.y);
     ctx1.stroke();
 
-    isArrow && drawArrow(middleX, middleY, ver2.x, ver2.y);
+    isArrow && drawArrow(arcX, arcY, ver2.x, ver2.y);
+    weight && drawWeight(weight, rectX, rectY, ctx1);
 };
 
 const drawConnectUnDirMatrix = (matrix) => {
@@ -170,16 +179,23 @@ const drawCondensationGraph = (components, ctx) => {
     });
 };
 
-export {
-    drawArc,
-    drawConnection,
-    drawCondensationGraph,
-    drawConnectDirMatrix,
-    drawConnectUnDirMatrix,
-};
-export const vertices = fillVertexes();
+const drawWeight = (weight, middleX, middleY, ctx) => {
+    const rectX = middleX - 50 / 2;
+    const rectY = middleY - 30 / 2;
 
-export const drawMinSkelet = (list) => {
+    ctx.globalCompositeOperation = 'source-over';
+    ctx.beginPath();
+    ctx.rect(rectX, rectY, 50, 30);
+    ctx.fillStyle = '#fff';
+    ctx.fill();
+    ctx.fillStyle = 'black';
+    ctx.stroke();
+    ctx.fillText(weight, middleX, middleY);
+    ctx.globalCompositeOperation = 'destination-over';
+};
+
+const drawMinSkelet = (list) => {
+    resetCanvas();
     let totalWeight = 0;
     const components = [];
     vertices.forEach((ver, i) => (components[i] = [ver]));
@@ -196,7 +212,7 @@ export const drawMinSkelet = (list) => {
         }
     };
     const iterator = () => {
-        if (vertices.every((ver) => ver.state === 'opened')) {
+        if (components.length === 1) {
             console.log(totalWeight);
             return;
         }
@@ -207,14 +223,22 @@ export const drawMinSkelet = (list) => {
             const index2 = findComponent(ver2);
             if (index1 !== index2) {
                 totalWeight += weight;
-                drawConnection(ver1, ver2, true);
+                drawConnection(ver1, ver2, true, weight);
                 unionComponents(index1, index2);
                 ver1.newState = 'opened';
                 ver2.newState = 'opened';
-                console.log(totalWeight);
                 return iterator;
             }
         }
     };
     return iterator;
 };
+export {
+    drawArc,
+    drawConnection,
+    drawCondensationGraph,
+    drawConnectDirMatrix,
+    drawConnectUnDirMatrix,
+    drawMinSkelet,
+};
+export const vertices = fillVertexes();

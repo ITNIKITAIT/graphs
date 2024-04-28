@@ -198,12 +198,17 @@ bfsButton.addEventListener('click', () => {
     bfsFunc();
 });
 
+// Min SKeleton
 const weightMatrix = matrixW(unDirMatrix);
 console.log(weightMatrix);
 const list = createListEdges(weightMatrix);
 console.log(list);
 
-const SkeletIterator = drawMinSkelet(list);
-document.addEventListener('keydown', () => {
-    SkeletIterator();
+const SkeletButton = document.querySelector('.createSkelet-btn');
+SkeletButton.addEventListener('click', () => {
+    SkeletButton.classList.toggle('btn-active');
+    const SkeletIterator = drawMinSkelet(list);
+    document.addEventListener('keydown', () => {
+        SkeletIterator();
+    });
 });
