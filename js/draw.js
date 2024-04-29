@@ -1,7 +1,7 @@
 import { Vertex, StrongVertex } from './vertex.js';
 import { N } from './matrix.js';
 import { ctx1, canvas, resetCanvas } from './ctx.js';
-import { ctx2, canvasComponents } from './ctx.js';
+import { canvasComponents } from './ctx.js';
 import { RADIUS } from './consts.js';
 
 const fillVertexes = () => {
@@ -212,13 +212,12 @@ const drawMinSkelet = (list) => {
         }
     };
 
-    let currentIndex = 0;
     const iterator = () => {
-        if (components.length === 1) {
+        if (list.next === null) {
             console.log('Total weight sum = ' + totalWeight);
             return;
         }
-        const { weight, firstVer, secondVer } = list[currentIndex];
+        const { weight, firstVer, secondVer } = list.data;
         const ver1 = vertices[firstVer];
         const ver2 = vertices[secondVer];
         const index1 = findComponent(ver1);
@@ -231,11 +230,18 @@ const drawMinSkelet = (list) => {
             ver2.newState = 'opened';
             return iterator;
         }
-        currentIndex++;
+        list = list.next;
         iterator();
     };
     return iterator;
 };
+
+const drawWeightUnDirMatrix = (list) => {
+    for (const { weight, firstVer, secondVer } of list) {
+        drawConnection(vertices[firstVer], vertices[secondVer], false, weight);
+    }
+};
+
 export {
     drawArc,
     drawConnection,
@@ -243,5 +249,6 @@ export {
     drawConnectDirMatrix,
     drawConnectUnDirMatrix,
     drawMinSkelet,
+    drawWeightUnDirMatrix,
 };
 export const vertices = fillVertexes();

@@ -4,6 +4,7 @@ import {
     drawCondensationGraph,
     vertices,
     drawMinSkelet,
+    drawWeightUnDirMatrix,
 } from './draw.js';
 import { ctx2, resetCanvas } from './ctx.js';
 import { findRoutes, fillRoutes } from './routes.js';
@@ -64,9 +65,11 @@ btnDirMatrix.addEventListener('click', () => {
     resetCanvas();
     drawConnectDirMatrix(dirMatrix);
 });
+
 btnUnDirMatrix.addEventListener('click', () => {
     resetCanvas();
     drawConnectUnDirMatrix(unDirMatrix);
+    // drawWeightUnDirMatrix(list);
 });
 
 const AllRoutes2 = findRoutes(dirMatrix, 2);
@@ -203,6 +206,8 @@ const weightMatrix = matrixW(unDirMatrix);
 console.log(weightMatrix);
 const list = createListEdges(weightMatrix);
 console.log(list);
+
+// fillMatrix(list1, weightMatrix);
 
 const SkeletButton = document.querySelector('.createSkelet-btn');
 SkeletButton.addEventListener('click', () => {

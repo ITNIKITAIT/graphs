@@ -145,6 +145,20 @@ const matrixW = (unDirMatrix) => {
     return matrixW;
 };
 
+// const createListEdges = (matrixW) => {
+//     const edges = [];
+//     for (let i = 0; i < matrixW.length; i++) {
+//         for (let j = 0; j < i; j++) {
+//             if (matrixW[i][j])
+//                 edges.push({
+//                     weight: matrixW[i][j],
+//                     firstVer: i,
+//                     secondVer: j,
+//                 });
+//         }
+//     }
+//     return edges.sort((edge1, edge2) => edge1.weight - edge2.weight);
+// };
 const createListEdges = (matrixW) => {
     const edges = [];
     for (let i = 0; i < matrixW.length; i++) {
@@ -157,7 +171,18 @@ const createListEdges = (matrixW) => {
                 });
         }
     }
-    return edges.sort((edge1, edge2) => edge1.weight - edge2.weight);
+    edges.sort((edge1, edge2) => edge2.weight - edge1.weight);
+
+    let list = null;
+
+    for (const edge of edges) {
+        const node = {
+            data: edge,
+            next: list,
+        };
+        list = node;
+    }
+    return list;
 };
 
 export {
