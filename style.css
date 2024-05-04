@@ -161,8 +161,7 @@ tr:nth-child(even) {
     position: relative;
 }
 
-.nextDfs-btn,
-.nextBfs-btn,
+.next-btn,
 .createdfs-btn,
 .createbfs-btn,
 .createSkelet-btn {
@@ -177,10 +176,22 @@ tr:nth-child(even) {
     background-color: #fff;
 }
 
-.nextDfs-btn,
-.nextBfs-btn {
+.next-btn {
     left: 50%;
     bottom: 0;
+    display: block;
+}
+
+.next-btn::before {
+    content: '';
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    right: 30px;
+
+    border-top: 7px solid transparent;
+    border-left: 15px solid black;
+    border-bottom: 7px solid transparent;
 }
 
 .createbfs-btn {
@@ -203,11 +214,10 @@ tr:nth-child(even) {
     border-radius: 0;
 }
 
-.nextDfs-btn:hover,
-.nextBfs-btn:hover,
+.next-btn:hover,
 .createdfs-btn:hover,
 .createbfs-btn:hover,
-.createSkelet-btn {
+.createSkelet-btn:hover {
     background-color: #efefef;
 }
 

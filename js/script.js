@@ -112,17 +112,36 @@ findHangingVertices(degreesMatix);
 
 const dfsButton = document.querySelector('.createdfs-btn');
 const bfsButton = document.querySelector('.createbfs-btn');
-const nextDfsBtn = document.querySelector('.nextDfs-btn');
-const nextBfsBtn = document.querySelector('.nextBfs-btn');
-nextDfsBtn.style.display = 'none';
-nextBfsBtn.style.display = 'none';
+const nextBtn = document.querySelector('.next-btn');
+// nextBtn.style.display = 'none';
+
+const activeButtons = {
+    currentBtn: null,
+    func: null,
+};
+
+const activateButton = (btn, func) => {
+    const curBtn = activeButtons.currentBtn;
+    const event = activeButtons.func;
+
+    if (curBtn) curBtn.classList.remove('btn-active');
+    activeButtons.currentBtn = btn;
+
+    if (event) nextBtn.removeEventListener('click', event);
+    activeButtons.func = func;
+
+    nextBtn.style.display = 'block';
+    nextBtn.addEventListener('click', func);
+
+    btn.classList.add('btn-active');
+};
 
 // DFS
 
-const dfsFunc = () => {
+const dfsButtonHandle = () => {
     resetCanvas();
     let dfsIterator = wrapperDfs(dirMatrix);
-    nextDfsBtn.addEventListener('click', () => {
+    const nextDfsBtnHandle = () => {
         if (vertices.every((ver) => ver.state === 'opened')) {
             console.log('matrixDfs:');
             console.log(matrixDfs);
@@ -146,25 +165,18 @@ const dfsFunc = () => {
                 }
             }
         } else dfsIterator = dfsIterator();
-    });
+    };
+    activateButton(dfsButton, nextDfsBtnHandle);
 };
 
-dfsButton.addEventListener('click', () => {
-    dfsButton.classList.add('btn-active');
-    if (bfsButton.classList.contains('btn-active')) {
-        bfsButton.classList.remove('btn-active');
-    }
-    nextDfsBtn.style.display = 'block';
-    nextBfsBtn.style.display = 'none';
-    dfsFunc();
-});
+dfsButton.addEventListener('click', dfsButtonHandle);
 
 // BFS
 
-const bfsFunc = () => {
+const bfsButtonHandle = () => {
     resetCanvas();
     let bfsIterator = wrapperBfs(dirMatrix);
-    nextBfsBtn.addEventListener('click', () => {
+    const nextBfsBtnHandle = () => {
         if (vertices.every((ver) => ver.state === 'opened')) {
             console.log('matrixBfs:');
             console.log(matrixBfs);
@@ -188,18 +200,11 @@ const bfsFunc = () => {
                 }
             }
         } else bfsIterator = bfsIterator();
-    });
+    };
+    activateButton(bfsButton, nextBfsBtnHandle);
 };
 
-bfsButton.addEventListener('click', () => {
-    bfsButton.classList.add('btn-active');
-    if (dfsButton.classList.contains('btn-active')) {
-        dfsButton.classList.remove('btn-active');
-    }
-    nextDfsBtn.style.display = 'none';
-    nextBfsBtn.style.display = 'block';
-    bfsFunc();
-});
+bfsButton.addEventListener('click', bfsButtonHandle);
 
 // Min SKeleton
 const weightMatrix = matrixW(unDirMatrix);
@@ -211,9 +216,9 @@ console.log(list);
 
 const SkeletButton = document.querySelector('.createSkelet-btn');
 SkeletButton.addEventListener('click', () => {
-    SkeletButton.classList.toggle('btn-active');
     const SkeletIterator = drawMinSkelet(list);
-    document.addEventListener('keydown', () => {
+    const SkeletonBtnHandle = () => {
         SkeletIterator();
-    });
+    };
+    activateButton(SkeletButton, SkeletonBtnHandle);
 });
